@@ -29,7 +29,8 @@
 
     setupCanvas();
     setup();
-    draw();
+    // draw();
+    drawEnd()
 
     function setupCanvas() {
         var canvas = document.createElement('canvas');
@@ -42,10 +43,9 @@
     }
 
     function setup() {
-        word = 'DELUGE?'
+        word = 'DELUGE'
 
-        wordHeight = width * .12 //context.measureText(word).width 
-
+        wordHeight = width * .12 //context.measureText(word).width  
         context.font = 'bold ' + wordHeight + 'px Arial';
 
         words = [
@@ -139,6 +139,9 @@
                 wordCount = 0;
             }
 
+            context.font = 'bold ' + wordHeight + 'px Arial';
+            context.textAlign = "start";
+
             context.fillStyle = 'gray';
             context.fillText(currentWord.word, lettersX + currentLetter.offset - currentWord.offset, lettersY)
             context.fillStyle = 'white'
@@ -146,7 +149,7 @@
         } else {
             letterCount = 0;
 
-            endFade =0;
+            endFade = 0;
             drawEnd();
         }
     }
@@ -156,17 +159,33 @@
         if (endFade < endFadeDuration) {
             setTimeout(drawEnd, 100)
 
-            endFade++ 
- 
+            endFade++
+
             g = (255 * (endFade / endFadeDuration)) | 0
 
             context.fillStyle = 'rgb(' + g + ',' + g + ',' + g + ')';
             context.fillRect(0, 0, width, height);
 
+            context.font = 'bold ' + wordHeight + 'px Arial';
+            context.textAlign = "left";
             context.fillStyle = 'black'
             context.fillText(word, lettersX, lettersY)
+
+            var offline1 = '75% of the 4.4 billion non-internet users worldwide are in 20 countries.'
+            var offline2 = '50 million of them are in the US...'
+
+            context.font = 'bold 21px Arial';
+            context.textAlign = "center";
+            context.fillText(offline1, width / 2, lettersY + 42)
+            context.fillText(offline2, width / 2, lettersY + 70)
+
+            context.strokeStyle = 'black'
+            context.lineWidth = '35'
+            context.moveTo(0, height / 2 - wordHeight / 3 - 5);
+            context.lineTo(width, height / 2 - wordHeight / 3 - 5)
+            context.stroke();
         } else
-            draw(); 
+            draw();
     }
 
     window.onresize = function() {
