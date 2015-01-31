@@ -41,12 +41,12 @@
         context = canvas.getContext('2d');
     }
 
-    function setup() {  
+    function setup() {
         word = 'DELUGE?'
 
         wordHeight = width * .12 //context.measureText(word).width 
 
-        context.font = 'bold '+ wordHeight + 'px Arial';
+        context.font = 'bold ' + wordHeight + 'px Arial';
 
         words = [
             'UNITED STATES',
@@ -112,9 +112,11 @@
         letterCount = 0;
 
         wordCount = 0;
-        wordDuration = 150;
+        wordDuration = 100;
 
         endDuration = 2000;
+        endFade = 0;
+        endFadeDuration = 100;
 
         currentLetter = '';
         currentWord = '';
@@ -139,24 +141,32 @@
 
             context.fillStyle = 'gray';
             context.fillText(currentWord.word, lettersX + currentLetter.offset - currentWord.offset, lettersY)
-        } else { 
+            context.fillStyle = 'white'
+            context.fillText(currentLetter.letter, lettersX + currentLetter.offset, lettersY)
+        } else {
             letterCount = 0;
 
+            endFade =0;
             drawEnd();
         }
-
-        context.fillStyle = 'white'
-        context.fillText(currentLetter.letter, lettersX + currentLetter.offset, lettersY)
     }
 
+
     function drawEnd() {
-        setTimeout(draw, endDuration)
+        if (endFade < endFadeDuration) {
+            setTimeout(drawEnd, 100)
 
-        context.fillStyle = 'white';
-        context.fillRect(0, 0, width, height);
+            endFade++ 
+ 
+            g = (255 * (endFade / endFadeDuration)) | 0
 
-        context.fillStyle = 'black'
-        context.fillText(word, lettersX, lettersY)
+            context.fillStyle = 'rgb(' + g + ',' + g + ',' + g + ')';
+            context.fillRect(0, 0, width, height);
+
+            context.fillStyle = 'black'
+            context.fillText(word, lettersX, lettersY)
+        } else
+            draw(); 
     }
 
     window.onresize = function() {
