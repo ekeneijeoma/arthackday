@@ -41,11 +41,10 @@
         context = canvas.getContext('2d');
     }
 
-    function setup() {
-        
+    function setup() {  
         word = 'DELUGE?'
 
-        wordHeight = width * .10 //context.measureText(word).width 
+        wordHeight = width * .12 //context.measureText(word).width 
 
         context.font = 'bold '+ wordHeight + 'px Arial';
 
@@ -113,7 +112,7 @@
         letterCount = 0;
 
         wordCount = 0;
-        wordDuration = 200;
+        wordDuration = 150;
 
         endDuration = 2000;
 
@@ -122,7 +121,7 @@
     }
 
     function draw(time) {
-        context.fillStyle = 'rgba(255, 255, 255, .75)';
+        context.fillStyle = 'black';
         context.fillRect(0, 0, width, height);
 
         if (letterCount < word.length) {
@@ -138,7 +137,7 @@
                 wordCount = 0;
             }
 
-            context.fillStyle = 'rgba(100, 100, 100, 1)';
+            context.fillStyle = 'gray';
             context.fillText(currentWord.word, lettersX + currentLetter.offset - currentWord.offset, lettersY)
         } else { 
             letterCount = 0;
@@ -146,14 +145,14 @@
             drawEnd();
         }
 
-        context.fillStyle = 'black'
+        context.fillStyle = 'white'
         context.fillText(currentLetter.letter, lettersX + currentLetter.offset, lettersY)
     }
 
     function drawEnd() {
         setTimeout(draw, endDuration)
 
-        context.fillStyle = 'rgba(255, 255, 255, 1)';
+        context.fillStyle = 'white';
         context.fillRect(0, 0, width, height);
 
         context.fillStyle = 'black'
