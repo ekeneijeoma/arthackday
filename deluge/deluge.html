@@ -1,0 +1,193 @@
+<head>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    #menu {
+        position: absolute;
+        z-index: 100;
+        padding: 10px 0 0 10px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="menu">
+        <!-- <button id="play">Play</button>
+        <button id="stop">Stop</button>
+        <button id="time"></button>
+        <button>Click and drag left to right to scrub</button> -->
+    </div>
+
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeoma.js"></script>
+    <script language="javascript">
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
+        noStroke();
+
+        textStyle(BOLD);
+
+        word = 'DELUGE'
+
+        wordHeight = width * .12;
+
+        words = [
+            'UNITED STATES',
+            'MEXICO',
+            'BRAZIL',
+            'IRAN',
+            'ISLAMIC REPUBLIC',
+            'TURKEY',
+            'EGYPT',
+            'NIGERIA',
+            'CONGO',
+            // 'DEMOCRATIC REPUBLIC',
+            'ETHIOPIA',
+            'TANZANIA',
+            'CHINA',
+            'PAKISTAN',
+            'PHILLIPPINES',
+            'VIETNAM',
+            'INDONESIA',
+            'THAILAND',
+            'MYANMAR',
+            'BANGLADESH',
+            // 'RUSSIAN FEDERATION'
+            'RUSSIA',
+            'RURAL',
+            'LOW INCOME',
+            'ELDERLY',
+            'ILLITERATE',
+            'FEMALE',
+            'INCENTIVES',
+            'AFFORDABILITY',
+            'USER CAPABILITY',
+            'INFRASTRUCTURE'
+        ];
+
+        lettersOffset = textWidth(word);
+
+        lettersX = width / 2 - lettersOffset;
+        lettersY = height / 2;
+
+        letters = [];
+
+        letterCopys = 2;
+
+        for (var i = 0; i < word.length; i++) {
+            var letter = word.charAt(i);
+            var letterWords = [];
+
+            for (var j in words)
+                for (var k in words[j])
+                    if (words[j][k] === letter)
+                        for (var l = 0; l < letterCopys; l++)
+                            letterWords.push({
+                                word: words[j],
+                                index: k,
+                                offset: letterOffset(words[j], k)
+                            })
+
+            letters.push({
+                letter: letter,
+                offset: letterOffset(word, i),
+                words: shuffle(letterWords)
+            })
+        }
+
+        letterCount = 0;
+
+        wordCount = 0;
+        wordDuration = 100;
+
+        endDuration = 2000;
+        endFade = 0;
+        endFadeDuration = 100;
+
+        currentLetter = '';
+        currentWord = '';
+    }
+
+    function draw() {
+        background(255);
+
+        g = (255 * (letterCount / word.length)) | 0
+            // context.fillStyle = 'rgb(' + g + ',' + g + ',' + g + ')';
+            // context.fillRect(0, 0, width, height);
+
+        if (letterCount < word.length) {
+            // drawTimeout = setTimeout(draw, wordDuration)
+
+            if (millis() % 10 == 0) {
+                if (wordCount < letters[letterCount].words.length - 1) {
+                    wordCount++;
+
+                    // currentLetter = letters[letterCount]
+                    // currentWord = letters[letterCount].words[wordCount];
+                } else {
+                    letterCount++;
+                    wordCount = 0;
+                }
+
+                console.log('asdfads')
+            } else {
+
+            }
+
+            currentLetter = letters[letterCount]
+            currentWord = letters[letterCount].words[wordCount];
+
+            // context.font = 'bold ' + wordHeight + 'px Arial';
+            // context.textAlign = "start";
+            textAlign(LEFT)
+            textSize(wordHeight);
+
+            fill(100);
+            text(currentWord.word, lettersX + currentLetter.offset - currentWord.offset, lettersY)
+
+            fill(255)
+            text(currentLetter.letter, lettersX + currentLetter.offset, lettersY)
+        } else {
+            letterCount = 0;
+
+            // endFade = 0;
+            // drawEnd();
+        }
+    }
+
+    function letterOffset(word, i) {
+        return textWidth(word.substring(0, i));
+    }
+
+    function shuffle(array) {
+        var currentIndex = array.length,
+            temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+    </script>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+    </head>
+
+    <body>
+    </body>

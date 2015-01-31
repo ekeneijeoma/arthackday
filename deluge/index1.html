@@ -23,14 +23,17 @@
     <div>
     </div>
 
+    <script src="js/RequestAnimationFrame.js"></script>
+    <script src="js/ijeoma.js"></script>
+
     <script language="javascript">
     var width = window.innerWidth;
     var height = window.innerHeight;
 
     setupCanvas();
     setup();
-    // draw();
-    drawEnd()
+    draw();
+    // drawEnd()
 
     function setupCanvas() {
         var canvas = document.createElement('canvas');
@@ -91,6 +94,8 @@
 
         letterCopys = 2;
 
+        wordTotal = 0;
+
         for (var i = 0; i < word.length; i++) {
             var letter = word.charAt(i);
             var letterWords = [];
@@ -110,98 +115,115 @@
                 offset: letterOffset(word, i),
                 words: shuffle(letterWords)
             })
+
+            wordTotal += letterWords.length
         }
 
         letterCount = 0;
 
         wordCount = 0;
-        wordDuration = 100;
+        wordDuration = 2;
 
-        endDuration = 2000;
+        endDuration = 1000;
         endFade = 0;
-        endFadeDuration = 100;
+        endFadeDuration = 10;
 
         currentLetter = '';
         currentWord = '';
+
+        frame = 0;
+
+        backgroundColor = 0
+
+        tween2 = new MOTION(1000).onUpdate(function() {
+            drawEnd()
+        }).onEnd(function(){
+            letterCount = 0;
+        })
+
+        tween = new MOTION.Tween('backgroundColor', [0, 255], wordTotal * wordDuration).play()
+            .onEnd(function(){
+                tween2.play()
+            }) 
     }
 
     function draw(time) {
-        // context.fillStyle = 'black'; 
+        requestAnimationFrame(draw);
 
-        g = (255 * (letterCount / word.length)) | 0
-        context.fillStyle = 'rgb(' + g + ',' + g + ',' + g + ')';
+        frame++;
+        MOTION.update(frame);
 
+        context.fillStyle = bw(backgroundColor);
         context.fillRect(0, 0, width, height);
 
         if (letterCount < word.length) {
-            drawTimeout = setTimeout(draw, wordDuration)
+            if (frame % wordDuration == 0) {
+                if (wordCount < letters[letterCount].words.length - 1) {
+                    wordCount++;
 
-            if (wordCount < letters[letterCount].words.length - 1) {
-                wordCount++;
-
-                currentLetter = letters[letterCount]
-                currentWord = letters[letterCount].words[wordCount];
-            } else {
-                letterCount++;
-                wordCount = 0;
+                    currentLetter = letters[letterCount]
+                    currentWord = letters[letterCount].words[wordCount];
+                } else {
+                    letterCount++;
+                    wordCount = 0;
+                }
             }
 
             context.font = 'bold ' + wordHeight + 'px Arial';
             context.textAlign = "start";
 
-            context.fillStyle = 'gray';
+            // context.fillStyle = 'gray';
+            context.fillStyle = bw(255 - backgroundColor);
             context.fillText(currentWord.word, lettersX + currentLetter.offset - currentWord.offset, lettersY)
-            context.fillStyle = 'white'
+            context.fillStyle = 'red'
             context.fillText(currentLetter.letter, lettersX + currentLetter.offset, lettersY)
         } else {
-            letterCount = 0;
 
-            endFade = 0;
-            drawEnd();
+            //letterCount = 0
+            // endFade = 0;
+            // tween2.play()
+            // drawEnd();
         }
     }
 
 
     function drawEnd() {
-        if (endFade < endFadeDuration) {
-            setTimeout(drawEnd, 100)
+        console.log(this.time())
+        console.log(context)
 
-            endFade++
+        context.fillStyle = 'black';
+        context.fillRect(0, 0, width, height);
 
-            a = (255 * (endFade / endFadeDuration)) | 0
-            backgroundColor = 255 - a;
-            textColor = a;
+        context.font = 'bold ' + wordHeight + 'px Arial';
+        context.textAlign = "left";
+        context.fillStyle = 'red'
+        context.fillText(word, lettersX, lettersY)
 
-            context.fillStyle = 'rgb(' + backgroundColor + ',' + backgroundColor + ',' + backgroundColor + ')';
-            context.fillRect(0, 0, width, height);
+        var text1 = '75% of the 4.4 billion offline are in 20 countries'
+        var text2 = 'including 50 million in the US...'
 
-            context.font = 'bold ' + wordHeight + 'px Arial';
-            context.textAlign = "left";
-            context.fillStyle = 'rgb(' + textColor + ',' + textColor + ',' + textColor + ')';
-            context.fillText(word, lettersX, lettersY)
+        context.font = 'bold 21px Arial';
+        context.textAlign = "center";
+        context.fillText(text1, width / 2, lettersY + 42)
+        context.fillText(text2, width / 2, lettersY + 70)
 
-            var text1 = '75% of the 4.4 billion offline are in 20 countries'
-            var text2 = 'including 50 million in the US...'
-
-            context.font = 'bold 21px Arial';
-            context.textAlign = "center";
-            context.fillText(text1, width / 2, lettersY + 42)
-            context.fillText(text2, width / 2, lettersY + 70)
-
-            context.strokeStyle = 'rgb(' + textColor + ',' + textColor + ',' + textColor + ')';
-            context.lineWidth = '35'
-            context.moveTo(0, height / 2 - wordHeight / 3 - 5);
-            context.lineTo(width, height / 2 - wordHeight / 3 - 5)
-            context.stroke();
-        } else
-            draw();
+        context.strokeStyle = 'red'
+        context.lineWidth = '35'
+        context.moveTo(0, height / 2 - wordHeight / 3 - 5);
+        context.lineTo(width, height / 2 - wordHeight / 3 - 5)
+        context.stroke();
     }
 
     window.onresize = function() {
-        clearTimeout(drawTimeout)
+        // clearTimeout(drawTimeout)
 
         setup();
         draw();
+    }
+
+    function bw(c) {
+        c = c | 0;
+        return 'rgb(' + c + ',' + c + ',' + c + ')'
     }
 
     function letterOffset(word, i) {
