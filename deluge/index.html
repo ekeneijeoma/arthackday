@@ -1,0 +1,173 @@
+<head>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    div {
+        position: absolute;
+        z-index: 100;
+        padding: 10px 0 0 10px;
+    }
+    @font-face {
+        font-family: 'liberation_monobold';
+        src: url('LiberationMono-Bold-webfont.eot');
+        src: url('LiberationMono-Bold-webfont.eot?#iefix') format('embedded-opentype'), url('LiberationMono-Bold-webfont.woff') format('woff'), url('LiberationMono-Bold-webfont.ttf') format('truetype'), url('LiberationMono-Bold-webfont.svg#liberation_monobold') format('svg');
+        font-weight: normal;
+        font-style: normal;
+    }
+    </style>
+</head>
+
+<body>
+    <div>
+    </div>
+
+    <script language="javascript">
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+
+    setupCanvas();
+    setup();
+    draw();
+
+    function setupCanvas() {
+        var canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        document.body.appendChild(canvas)
+
+        context = canvas.getContext('2d');
+    }
+
+    function setup() {
+        word = 'DELUGE?'
+
+        wordHeight = width * .10 //context.measureText(word).width 
+
+        context.font = 'bold '+ wordHeight + 'px Arial';
+
+        words = [
+            'UNITED STATES',
+            'MEXICO',
+            'BRAZIL',
+            'IRAN',
+            'ISLAMIC REPUBLIC',
+            'TURKEY',
+            'EGYPT',
+            'NIGERIA',
+            'CONGO',
+            // 'DEMOCRATIC REPUBLIC',
+            'ETHIOPIA',
+            'TANZANIA',
+            'CHINA',
+            'PAKISTAN',
+            'PHILLIPPINES',
+            'VIETNAM',
+            'INDONESIA',
+            'THAILAND',
+            'MYANMAR',
+            'BANGLADESH',
+            // 'RUSSIAN FEDERATION'
+            'RUSSIA',
+            'RURAL',
+            'LOW INCOME',
+            'ELDERLY',
+            'ILLITERATE',
+            'FEMALE',
+            'INCENTIVES',
+            'AFFORDABILITY',
+            'USER CAPABILITY',
+            'INFRASTRUCTURE'
+        ];
+
+        lettersOffset = context.measureText(word).width / 2;
+
+        lettersX = width / 2 - lettersOffset;
+        lettersY = height / 2;
+
+        letters = [];
+
+        for (var i = 0; i < word.length; i++) {
+            var letter = word.charAt(i);
+            var letterWords = [];
+
+            for (var j in words)
+                for (var k in words[j])
+                    if (words[j][k] === letter)
+                        letterWords.push({
+                            word: words[j],
+                            index: k,
+                            offset: letterOffset(words[j], k)
+                        })
+
+            letters.push({
+                letter: letter,
+                offset: letterOffset(word, i),
+                words: letterWords
+            })
+        }
+
+        letterCount = 0;
+
+        wordCount = 0;
+        wordDuration = 200;
+
+        endDuration = 2000;
+
+        currentLetter = '';
+        currentWord = '';
+    }
+
+    function draw(time) {
+        context.fillStyle = 'rgba(255, 255, 255, .75)';
+        context.fillRect(0, 0, width, height);
+
+        if (letterCount < word.length) {
+            drawTimeout = setTimeout(draw, wordDuration)
+
+            if (wordCount < letters[letterCount].words.length - 1) {
+                wordCount++;
+
+                currentLetter = letters[letterCount]
+                currentWord = letters[letterCount].words[wordCount];
+            } else {
+                letterCount++;
+                wordCount = 0;
+            }
+
+            context.fillStyle = 'rgba(100, 100, 100, 1)';
+            context.fillText(currentWord.word, lettersX + currentLetter.offset - currentWord.offset, lettersY)
+        } else { 
+            letterCount = 0;
+
+            drawEnd();
+        }
+
+        context.fillStyle = 'black'
+        context.fillText(currentLetter.letter, lettersX + currentLetter.offset, lettersY)
+    }
+
+    function drawEnd() {
+        setTimeout(draw, endDuration)
+
+        context.fillStyle = 'rgba(255, 255, 255, 1)';
+        context.fillRect(0, 0, width, height);
+
+        context.fillStyle = 'black'
+        context.fillText(word, lettersX, lettersY)
+    }
+
+    window.onresize = function() {
+        clearTimeout(drawTimeout)
+
+        setup();
+        draw();
+    }
+
+    function letterOffset(word, i) {
+        return context.measureText(word.substring(0, i)).width;
+    }
+    </script>
+</body>
