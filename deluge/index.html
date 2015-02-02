@@ -75,7 +75,7 @@
             'INFRASTRUCTURE'
         ];
 
-        letterWordRepeat = 2;
+        letterWordRepeat = 3;
 
         letterCount = 0;
         wordCount = 0;
@@ -88,6 +88,8 @@
 
         currentLetter = '';
         currentWord = '';
+
+        ended = false;
 
         setupSequence();
     }
@@ -117,6 +119,7 @@
 
         // titleLettersSequence.onEnd(setupSequence)
         titleLettersSequence.onEnd(function() {
+            ended = false;
             lettersSequence.play()
         })
 
@@ -164,6 +167,7 @@
 
         lettersSequence.play()
             .onEnd(function() {
+                ended = true;
                 titleLettersSequence.play();
             })
             // titleLettersSequence.play().onEnd(function() {});
@@ -174,11 +178,10 @@
 
         MOTION.update(time);
 
-        // context.fillStyle = bw(255-lettersSequence.position() * 255); 
-        context.fillStyle = bw(0);
+        context.fillStyle = bw(255 - lettersSequence.position() * 255);
         context.fillRect(0, 0, width, height);
 
-        if (lettersSequence.isPlaying()) {
+        if (!ended) {
             context.font = 'bold ' + wordHeight + 'px Arial';
             context.textAlign = "start";
 
@@ -206,6 +209,15 @@
             context.fillStyle = bw(captionColor)
             context.fillText('percent of the 4.4 billion people offline worldwide are in 20 countries', width / 2, letters.y + 42)
             context.fillText('including the U.S., which has 50 million; 1 of out of 6 people in the U.S....', width / 2, letters.y + 70)
+        }
+    }
+
+    window.onmousemove = function(e) { 
+        if (e.clientY > height / 2 - wordHeight && e.clientY < height / 2) { 
+            lettersSequence.pause();
+        } else {
+            if (!lettersSequence.isPlaying())
+                lettersSequence.resume();
         }
     }
 
