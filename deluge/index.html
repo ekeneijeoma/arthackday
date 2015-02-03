@@ -2,6 +2,10 @@
     <title>75% by Ekene Ijeoma - 2014 ARTHACKDAY - DELUGE </title>
     <!-- <meta property="og:image" content=" " /> -->
     <meta property="og:description" content="75% BY EKENE IJEOMA - 2015 - WWW.EKENEIJEOMA.COM - ARTHACKDAY DELUGE" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
     body {
         padding: 0;
@@ -25,5 +29,17 @@
     </div> -->
     <script src="js/RequestAnimationFrame.js"></script>
     <script src="js/ijeoma.js"></script>
-    <script src="js/main.js"></script> 
+    <script src="js/main.js"></script>
+    <script>
+    { %
+        if is_mobile %
+    }
+    // Hides mobile browser's address bar when page is done loading.
+    window.addEventListener('load', function(e) {
+        setTimeout(function() {
+            window.scrollTo(0, 1);
+        }, 1);
+    }, false); { % endif %
+    }
+    </script>
 </body>
