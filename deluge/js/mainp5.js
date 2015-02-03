@@ -37,35 +37,32 @@ function setup() {
         'INFRASTRUCTURE'
     ];
 
-    letterWordRepeat = 2;
-
+    currentLetter = '';
     letterCount = 0;
-    wordCount = 0;
+    letterWordRepeat = 2;
+    letterFadeDuration = 1000;
 
+    currentWord = '';
+    wordCount = 0;
     wordDuration = 75;
 
-    titleDuration = 12500;
-    titleLetterDuration = 500;
-    captionDuration = 1000;
-
-    currentLetter = '';
-    currentWord = '';
-
-    ended = false;
-
     titleHeight = width * .125
-    titleBottomMargin = titleHeight * .1;
+    titleBottomMargin = titleHeight * .1; 
+    titleColor = 255;
+    titleDuration = 12500; 
 
     captionHeight = max(width * .015, 14)
+    captionDuration = 1000;
+
+    backgroundColor = 255;
+
+    ended = false;
 
     textFont('Helvetica Neue, Helvetica, Arial, sans-serif')
     textStyle(BOLD)
     textSize(titleHeight)
 
     noStroke();
-
-    backgroundColor = 255;
-    titleColor = 255;
 
     setupSequence();
 }
@@ -137,8 +134,8 @@ function setupSequence() {
         .onStart(function() {
             backgroundColorTween = new MOTION.Tween('backgroundColor', [255, 0], this.duration()).play()
             titleColorTween = new MOTION.Sequence()
-                .add(new MOTION.Tween('titleColor', [255, 0], 2000))
-                .add(new MOTION.Tween('titleColor', [0, 255], this.duration()-2000))
+                .add(new MOTION.Tween('titleColor', [255, 0], letterFadeDuration))
+                .add(new MOTION.Tween('titleColor', [0, 255], this.duration() - letterFadeDuration))
                 .play()
         })
         .onEnd(function() {
