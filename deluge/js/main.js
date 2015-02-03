@@ -16,8 +16,9 @@ function setup() {
 
     word = 'SEVENTYFIVE'
 
-    wordHeight = width * .11 //context.measureText(word).width  
-    context.font = 'bold ' + wordHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
+    titleHeight = width * .125 //context.measureText(word).width  
+    captionHeight = width * .015   
+    context.font = 'bold ' + titleHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
 
     words = [
         'UNITED STATES',
@@ -61,7 +62,7 @@ function setup() {
     wordDuration = 75;
     // wordDuration = 25;
 
-    titleDuration = 10250;
+    titleDuration = 12500;
     titleLetterDuration = 500;
     captionDuration = 1000;
 
@@ -171,7 +172,7 @@ function draw(time) {
     context.fillRect(0, 0, width, height);
 
     if (!ended) {
-        context.font = 'bold ' + wordHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
+        context.font = 'bold ' + titleHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
         context.textAlign = "start";
 
         context.fillStyle = bw(lettersSequence.position() * 255);
@@ -180,7 +181,7 @@ function draw(time) {
         context.fillStyle = 'white'
         context.fillText(currentLetter.letter, letters.x + currentLetter.offset, letters.y)
     } else {
-        context.font = 'bold ' + wordHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
+        context.font = 'bold ' + titleHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
         context.textAlign = "left";
 
         // if (titleLettersSequence.getCurrentIndex() < 3) {
@@ -193,11 +194,11 @@ function draw(time) {
             //     }
             // }
 
-        context.font = 'bold 21px Helvetica Neue, Helvetica, Arial, sans-serif';
+        context.font = 'bold '+captionHeight+'px Helvetica Neue, Helvetica, Arial, sans-serif';
         context.textAlign = "center";
         context.fillStyle = bw(captionColor)
         context.fillText('percent of the 4.4 billion people offline worldwide are in 20 countries', width / 2, letters.y + 42)
-        context.fillText('including the U.S., which has 50 million; 1 of out of 6 people in the U.S....', width / 2, letters.y + 70)
+        context.fillText('including the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + 70)
     }
 }
 
@@ -216,7 +217,7 @@ function resume() {
 document.body.addEventListener('mousemove', function(e) {
     if (ended) return false;
 
-    if (e.clientY > height / 2 - wordHeight && e.clientY < height / 2) {
+    if (e.clientY > height / 2 - titleHeight && e.clientY < height / 2) {
         pause();
     } else {
         resume();
