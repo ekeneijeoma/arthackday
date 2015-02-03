@@ -1,5 +1,5 @@
 <head>
-    <title>75% by Ekene Ijeoma - 2014 ARTHACKDAY - DELUGE </title>
+    <title>75% by Ekene Ijeoma - 2014 ARTHACKDAY - DELUGE</title>
     <!-- <meta property="og:image" content=" " /> -->
     <meta property="og:description" content="75% BY EKENE IJEOMA - 2015 - WWW.EKENEIJEOMA.COM - ARTHACKDAY DELUGE" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -13,22 +13,39 @@
         margin: 0;
         overflow: hidden;
     }
-    #info {
+    #credits {
         position: absolute;
-        right: 5%;
-        bottom: 5%;
-        color: red;
-        z-index: 3;
-        font: normal bold 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        right: 2%;
+        bottom: 2%;
+        color: #fff;
+        z-index: 2;
+        font: normal normal 12px'Helvetica Neue', Helvetica, Arial, sans-serif;
+        cursor: pointer;
     }
+    #credits-text {
+        display: none;
+    } 
+    a, a:link, a:visited, a:hover, a:active {
+        color:#fff
+    } 
     </style>
 </head>
 
 <body>
-    <!-- <div id="info">
-        ?
-    </div> --> 
+    <div id="credits" onclick="toggleCredits()">
+        <span id="credits-link">?</span> 
+        <span id="credits-text">SEVENTYFIVE by <a href="https://twitter.com/ekeneijeoma">@ekeneijeoma</a>
+        </span>
+    </div>
     <script src="js/p5.js"></script>
-    <script src="js/ijeoma.js"></script> 
-    <script src="js/main.js"></script> 
+    <script src="js/ijeoma.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    function toggleCredits() {
+        var text = document.getElementById('credits-text');
+        var link = document.getElementById('credits-link');
+        text.style.display = (text.style.display === 'none') ? 'inline' : 'none'
+        link.style.display = (text.style.display === 'none') ? 'inline' : 'none'
+    }
+    </script>
 </body>
