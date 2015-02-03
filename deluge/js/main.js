@@ -1,28 +1,7 @@
-var width = window.innerWidth;
-var height = window.innerHeight;
-
-setup();
-draw();
-// drawEnd()
-
 function setup() {
-    var canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-
-    document.body.appendChild(canvas)
-
-    context = canvas.getContext('2d');
+    createCanvas(windowWidth, windowHeight);
 
     word = 'SEVENTYFIVE'
-
-    titleHeight = width * .125 //context.measureText(word).width  
-    titleBottomMargin = titleHeight * .1;
-    captionHeight = width * .015 
-    if(captionHeight <= 14)
-          captionHeight = 14
-    captionLineHeight = captionHeight + captionHeight * .5;
-    context.font = 'bold ' + titleHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
 
     words = [
         'UNITED STATES',
@@ -58,24 +37,32 @@ function setup() {
         'INFRASTRUCTURE'
     ];
 
-    letterWordRepeat = 2;
-
+    currentLetter = '';
     letterCount = 0;
+    letterWordRepeat = 2;
+    letterFadeDuration = 1000;
+
+    currentWord = '';
     wordCount = 0;
+    wordDuration = 90;
 
-    wordDuration = 75;
-    // wordDuration = 25;
-
+    titleHeight = width * .125
+    titleBottomMargin = titleHeight * .25;
+    titleColor = 255;
     titleDuration = 12500;
-    titleLetterDuration = 500;
+
+    captionHeight = max(width * .015, 14)
     captionDuration = 1000;
 
-    currentLetter = '';
-    currentWord = '';
+    backgroundColor = 255;
 
     ended = false;
 
-    backgroundColor = 255;
+    textFont('Helvetica Neue, Helvetica, Arial, sans-serif')
+    textStyle(BOLD)
+    textSize(titleHeight)
+
+    noStroke();
 
     setupSequence();
 }
@@ -88,32 +75,21 @@ function setupSequence() {
     titleLettersSequence = new MOTION.Sequence();
 
     titleLettersSequence.add(new MOTION.Tween(captionDuration)
-        .add('captionColor', [0, 255])
-        .add('titleColor', [0, 255]))
+            .add('captionColor', [0, 255]))
+        // .add('titleColor', [0, 255]))
 
     titleLettersSequence.add(new MOTION(titleDuration))
-        // titleLettersSequence.add(new MOTION.Tween('captionColor', [255, 0], captionDuration))
 
-    // for (var i = word.length - 1; i >= 0; i--) {
-    //     var l = {
-    //         letter: word.charAt(i),
-    //         offset: context.measureText(word.substring(0, i)).width,
-    //     }
-    //     titleLetters.push(l)
-    //     titleLettersSequence.add(new MOTION.Tween(l, 'color', [255, 0], titleLetterDuration))
-    // }
-
-    // titleLettersSequence.onEnd(setupSequence)
     titleLettersSequence
         .onStart(function() {
-            backgroundTween = new MOTION.Tween('backgroundColor', [0, 255], this.duration()).play()
+            backgroundColorTween = new MOTION.Tween('backgroundColor', [0, 255], this.duration()).play()
         }).onEnd(function() {
             ended = false;
             lettersSequence.play()
         })
 
     letters = [];
-    letters.offset = context.measureText(word).width / 2;
+    letters.offset = textWidth(word) / 2;
 
     letters.x = width / 2 - letters.offset;
     letters.y = height / 2;
@@ -129,12 +105,12 @@ function setupSequence() {
                         letterWords.push({
                             word: words[j],
                             index: k,
-                            offset: context.measureText(words[j].substring(0, k)).width
+                            offset: textWidth(words[j].substring(0, k))
                         })
 
         letters.push({
             letter: letter,
-            offset: context.measureText(word.substring(0, i)).width,
+            offset: textWidth(word.substring(0, i)),
             words: shuffle(letterWords)
         })
     }
@@ -156,7 +132,11 @@ function setupSequence() {
 
     lettersSequence
         .onStart(function() {
-            backgroundTween = new MOTION.Tween('backgroundColor', [255, 0], this.duration()).play()
+            backgroundColorTween = new MOTION.Tween('backgroundColor', [255, 0], this.duration()).play()
+            titleColorTween = new MOTION.Sequence()
+                .add(new MOTION.Tween('titleColor', [255, 0], letterFadeDuration))
+                .add(new MOTION.Tween('titleColor', [0, 255], this.duration() - letterFadeDuration))
+                .play()
         })
         .onEnd(function() {
             ended = true;
@@ -167,178 +147,111 @@ function setupSequence() {
     // titleLettersSequence.play().onEnd(function() {});
 }
 
-function draw(time) {
-    requestAnimationFrame(draw);
-
-    MOTION.update(time);
-
-    context.fillStyle = bw(backgroundColor);
-    context.fillRect(0, 0, width, height);
-
-    if (!ended) {
-        context.font = 'bold ' + titleHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
-        context.textAlign = "start";
-
-        context.fillStyle = bw(lettersSequence.position() * 255);
-        context.fillText(currentWord.word, letters.x + currentLetter.offset - currentWord.offset, letters.y)
-
-        context.fillStyle = 'white'
-        context.fillText(currentLetter.letter, letters.x + currentLetter.offset, letters.y)
-    } else {
-        context.font = 'bold ' + titleHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
-        context.textAlign = "left";
-
-        // if (titleLettersSequence.getCurrentIndex() < 3) {
-        context.fillStyle = bw(titleColor)
-        context.fillText(word, letters.x, letters.y)
-            // } else {
-            //     for (var i in titleLetters) {
-            //         context.fillStyle = bw(titleLetters[i].color)
-            //         context.fillText(titleLetters[i].letter, letters.x + titleLetters[i].offset, letters.y)
-            //     }
-            // }
-
-        context.font = 'bold '+captionHeight+'px Helvetica Neue, Helvetica, Arial, sans-serif';
-        context.textAlign = "center";
-        context.fillStyle = bw(captionColor)
-        context.fillText('percent of the 4.4 billion people offline worldwide are in 20 countries', width / 2, letters.y + titleBottomMargin + captionLineHeight)
-        context.fillText('including the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + titleBottomMargin + captionLineHeight*2)
-    }
-}
-
-function pause() {
+function pauseSequence() {
     lettersSequence.pause();
-    backgroundTween.pause();
+    titleColorTween.pause();
+    backgroundColorTween.pause();
 }
 
-function resume() {
+function resumeSequence() {
     if (!lettersSequence.isPlaying()) {
         lettersSequence.resume();
-        backgroundTween.resume();
+        titleColorTween.resume();
+        backgroundColorTween.resume();
     }
 }
 
-document.body.addEventListener('mousemove', function(e) {
+function draw() {
+    MOTION.update(millis());
+
+    background(backgroundColor);
+    // blur(3);
+    //     Filters.filterImage(Filters.convolute, image,
+    //   [ 1/9, 1/9, 1/9,
+    //     1/9, 1/9, 1/9,
+    //     1/9, 1/9, 1/9 ]
+    // );
+
+
+    if (!ended) {
+        textSize(titleHeight)
+        textAlign(LEFT);
+
+        fill(titleColor)
+        text(1, letters.x, letters.y)
+        text(currentWord.word, letters.x + currentLetter.offset - currentWord.offset, letters.y)
+
+        fill(255)
+        text(currentLetter.letter, letters.x + currentLetter.offset, letters.y)
+    } else {
+        textSize(titleHeight)
+        textAlign(LEFT);
+
+        fill(titleColor)
+        text(word, letters.x, letters.y)
+
+        textSize(captionHeight)
+        textAlign(CENTER);
+        fill(captionColor)
+        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + titleBottomMargin)
+    }
+}
+
+function mouseMoved() {
     if (ended) return false;
 
-    if (e.clientY > height / 2 - titleHeight && e.clientY < height / 2) {
-        pause();
-    } else {
-        resume();
-    }
-}, false)
-
-document.body.addEventListener('touchstart', function(e) {
-    e.preventDefault();
-    pause();
-}, false);
-document.body.addEventListener('touchend', function(e) {
-    e.preventDefault();
-    resume();
-}, false);
-document.body.addEventListener('touchmove', function(e) {
-    e.preventDefault();
-}, false);
-
-function bw(c, a) {
-    r = g = b = (c | 0);
-    a = (a) ? a : 1;
-    return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')'
+    if (mouseY > height / 2 - titleHeight && mouseY < height / 2)
+        pauseSequence();
+    else
+        resumeSequence();
 }
 
-function shuffle(array) {
-    var currentIndex = array.length,
-        temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
+function touchStarted() {
+    pauseSequence();
 }
 
+function touchEnded() {
+    resumeSequence();
+}
 
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/array/shuffle [v1.0]
+function shuffle(o) { //v1.0
+    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
 
-// Filters = {};
-// Filters.getPixels = function(img) {
-//     var c = this.getCanvas(img.width, img.height);
-//     var ctx = c.getContext('2d');
-//     ctx.drawImage(img);
-//     return ctx.getImageData(0, 0, c.width, c.height);
-// };
+/*! Normalized address bar hiding for iOS & Android (c) @scottjehl MIT License */
+(function(win) {
+    var doc = win.document;
 
-// Filters.getCanvas = function(w, h) {
-//     var c = document.createElement('canvas');
-//     c.width = w;
-//     c.height = h;
-//     return c;
-// };
+    // If there's a hash, or addEventListener is undefined, stop here
+    if (!win.navigator.standalone && !location.hash && win.addEventListener) {
 
-// Filters.filterImage = function(filter, image, var_args) {
-//     var args = [this.getPixels(image)];
-//     for (var i = 2; i < arguments.length; i++) {
-//         args.push(arguments[i]);
-//     }
-//     return filter.apply(null, args);
-// };
+        //scroll to 1
+        win.scrollTo(0, 1);
+        var scrollTop = 1,
+            getScrollTop = function() {
+                return win.pageYOffset || doc.compatMode === "CSS1Compat" && doc.documentElement.scrollTop || doc.body.scrollTop || 0;
+            },
 
-// Filters.convolute = function(pixels, weights, opaque) {
-//     var side = Math.round(Math.sqrt(weights.length));
-//     var halfSide = Math.floor(side / 2);
-//     var src = pixels.data;
-//     var sw = pixels.width;
-//     var sh = pixels.height;
-//     // pad output by the convolution matrix
-//     var w = sw;
-//     var h = sh;
-//     var output = Filters.createImageData(w, h);
-//     var dst = output.data;
-//     // go through the destination image pixels
-//     var alphaFac = opaque ? 1 : 0;
-//     for (var y = 0; y < h; y++) {
-//         for (var x = 0; x < w; x++) {
-//             var sy = y;
-//             var sx = x;
-//             var dstOff = (y * w + x) * 4;
-//             // calculate the weighed sum of the source image pixels that
-//             // fall under the convolution matrix
-//             var r = 0,
-//                 g = 0,
-//                 b = 0,
-//                 a = 0;
-//             for (var cy = 0; cy < side; cy++) {
-//                 for (var cx = 0; cx < side; cx++) {
-//                     var scy = sy + cy - halfSide;
-//                     var scx = sx + cx - halfSide;
-//                     if (scy >= 0 && scy < sh && scx >= 0 && scx < sw) {
-//                         var srcOff = (scy * sw + scx) * 4;
-//                         var wt = weights[cy * side + cx];
-//                         r += src[srcOff] * wt;
-//                         g += src[srcOff + 1] * wt;
-//                         b += src[srcOff + 2] * wt;
-//                         a += src[srcOff + 3] * wt;
-//                     }
-//                 }
-//             }
-//             dst[dstOff] = r;
-//             dst[dstOff + 1] = g;
-//             dst[dstOff + 2] = b;
-//             dst[dstOff + 3] = a + alphaFac * (255 - a);
-//         }
-//     }
-//     return output;
-// };
+            //reset to 0 on bodyready, if needed
+            bodycheck = setInterval(function() {
+                if (doc.body) {
+                    clearInterval(bodycheck);
+                    scrollTop = getScrollTop();
+                    win.scrollTo(0, scrollTop === 1 ? 0 : 1);
+                }
+            }, 15);
 
-// Filters.filterImage(Filters.convolute, image, [1 / 9, 1 / 9, 1 / 9,
-//     1 / 9, 1 / 9, 1 / 9,
-//     1 / 9, 1 / 9, 1 / 9
-// ]);
+        win.addEventListener("load", function() {
+            setTimeout(function() {
+                //at load, if user hasn't scrolled more than 20 or so...
+                if (getScrollTop() < 20) {
+                    //reset to hide addr bar at onload
+                    win.scrollTo(0, scrollTop === 1 ? 0 : 1);
+                }
+            }, 0);
+        }, false);
+    }
+})(this);
