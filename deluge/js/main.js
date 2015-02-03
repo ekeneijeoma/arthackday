@@ -77,12 +77,12 @@ function setupAnimation() {
     titleBottomMargin = titleHeight * .25;
 
     captionHeight = max(width * .015, 14)
- 
+
     textSize(titleHeight);
 
-    MOTION.removeAll();
-
     titleLetters = []
+
+    MOTION.removeAll();
 
     titleLettersSequence = new MOTION.Sequence();
 
@@ -184,29 +184,27 @@ function draw() {
     //     1/9, 1/9, 1/9 ]
     // );
 
-    translate(letters.x, letters.y);
-
     if (!ended) {
         textSize(titleHeight);
         textAlign(LEFT);
 
         fill(titleColor);
-        text(1, 0, 0);
-        text(currentWord.word,  currentLetter.offset - currentWord.offset, 0);
+        text(1, letters.x, letters.y);
+        text(currentWord.word, letters.x + currentLetter.offset - currentWord.offset, letters.y);
 
         fill(255)
-        text(currentLetter.letter,  currentLetter.offset, 0);
+        text(currentLetter.letter, letters.x + currentLetter.offset, letters.y);
     } else {
         textSize(titleHeight);
         textAlign(LEFT);
 
         fill(titleColor);
-        text(word, 0, 0);
+        text(word, letters.x, letters.y);
 
         textSize(captionHeight);
         textAlign(CENTER);
         fill(captionColor);
-        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', 0, titleBottomMargin)
+        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + titleBottomMargin)
     }
 }
 
