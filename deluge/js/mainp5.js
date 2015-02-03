@@ -1,7 +1,7 @@
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    word = 'SEVENTYFIVE' 
+    word = 'SEVENTYFIVE'
 
     words = [
         'UNITED STATES',
@@ -57,7 +57,6 @@ function setup() {
     titleBottomMargin = titleHeight * .1;
 
     captionHeight = max(width * .015, 14)
-    captionLineHeight = captionHeight + captionHeight * .5;
 
     textFont('Helvetica Neue, Helvetica, Arial, sans-serif')
     textStyle(BOLD)
@@ -146,6 +145,18 @@ function setupSequence() {
     // titleLettersSequence.play().onEnd(function() {});
 }
 
+function pauseSequence() {
+    lettersSequence.pause();
+    backgroundTween.pause();
+}
+
+function resumeSequence() {
+    if (!lettersSequence.isPlaying()) {
+        lettersSequence.resume();
+        backgroundTween.resume();
+    }
+}
+
 function draw() {
     MOTION.update(millis());
 
@@ -170,56 +181,30 @@ function draw() {
         textSize(captionHeight)
         textAlign(CENTER);
         fill(captionColor)
-        text('percent of the 4.4 billion people offline worldwide are in 20 countries', width / 2, letters.y + titleBottomMargin + captionLineHeight)
-        text('including the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + titleBottomMargin + captionLineHeight * 2)
-    }
-}
-
-function pause() {
-    lettersSequence.pause();
-    backgroundTween.pause();
-}
-
-function resume() {
-    if (!lettersSequence.isPlaying()) {
-        lettersSequence.resume();
-        backgroundTween.resume();
+        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + titleBottomMargin + captionLineHeight)
     }
 }
 
 function mouseMoved() {
     if (ended) return false;
 
-    if (e.clientY > height / 2 - titleHeight && e.clientY < height / 2)
-        pause();
+    if (mouseY > height / 2 - titleHeight && mouseY < height / 2)
+        pauseSequence();
     else
-        resume();
+        resumeSequence();
 }
 
 function touchStarted() {
-    pause();
+    pauseSequence();
 }
 
 function touchEnded() {
-    resume();
+    resumeSequence();
 }
 
-function shuffle(array) {
-    var currentIndex = array.length,
-        temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-}
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/array/shuffle [v1.0]
+function shuffle(o) { //v1.0
+    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
