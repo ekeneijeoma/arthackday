@@ -65,6 +65,7 @@ function setup() {
     noStroke();
 
     backgroundColor = 255;
+    titleColor = 255;
 
     setupSequence();
 }
@@ -77,14 +78,14 @@ function setupSequence() {
     titleLettersSequence = new MOTION.Sequence();
 
     titleLettersSequence.add(new MOTION.Tween(captionDuration)
-        .add('captionColor', [0, 255])
-        .add('titleColor', [0, 255]))
+            .add('captionColor', [0, 255]))
+        // .add('titleColor', [0, 255]))
 
     titleLettersSequence.add(new MOTION(titleDuration))
 
     titleLettersSequence
         .onStart(function() {
-            backgroundTween = new MOTION.Tween('backgroundColor', [0, 255], this.duration()).play()
+            backgroundColorTween = new MOTION.Tween('backgroundColor', [0, 255], this.duration()).play()
         }).onEnd(function() {
             ended = false;
             lettersSequence.play()
@@ -134,7 +135,11 @@ function setupSequence() {
 
     lettersSequence
         .onStart(function() {
-            backgroundTween = new MOTION.Tween('backgroundColor', [255, 0], this.duration()).play()
+            backgroundColorTween = new MOTION.Tween('backgroundColor', [255, 0], this.duration()).play()
+            titleColorTween = new MOTION.Sequence()
+                .add(new MOTION.Tween('titleColor', [255, 0], 2000))
+                .add(new MOTION.Tween('titleColor', [0, 255], this.duration()-2000))
+                .play()
         })
         .onEnd(function() {
             ended = true;
@@ -147,13 +152,15 @@ function setupSequence() {
 
 function pauseSequence() {
     lettersSequence.pause();
-    backgroundTween.pause();
+    titleColorTween.pause();
+    backgroundColorTween.pause();
 }
 
 function resumeSequence() {
     if (!lettersSequence.isPlaying()) {
         lettersSequence.resume();
-        backgroundTween.resume();
+        titleColorTween.resume();
+        backgroundColorTween.resume();
     }
 }
 
@@ -161,12 +168,20 @@ function draw() {
     MOTION.update(millis());
 
     background(backgroundColor);
+    // blur(3);
+    //     Filters.filterImage(Filters.convolute, image,
+    //   [ 1/9, 1/9, 1/9,
+    //     1/9, 1/9, 1/9,
+    //     1/9, 1/9, 1/9 ]
+    // );
+
 
     if (!ended) {
         textSize(titleHeight)
         textAlign(LEFT);
 
-        fill(lettersSequence.position() * 255)
+        fill(titleColor)
+        text(1, letters.x, letters.y)
         text(currentWord.word, letters.x + currentLetter.offset - currentWord.offset, letters.y)
 
         fill(255)
@@ -181,7 +196,7 @@ function draw() {
         textSize(captionHeight)
         textAlign(CENTER);
         fill(captionColor)
-        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + titleBottomMargin + captionLineHeight)
+        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + titleBottomMargin)
     }
 }
 
