@@ -17,7 +17,9 @@ function setup() {
     word = 'SEVENTYFIVE'
 
     titleHeight = width * .125 //context.measureText(word).width  
+    titleBottomMargin = titleHeight * .1;
     captionHeight = width * .015   
+    captionLineHeight = captionHeight + captionHeight * .5;
     context.font = 'bold ' + titleHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
 
     words = [
@@ -197,8 +199,8 @@ function draw(time) {
         context.font = 'bold '+captionHeight+'px Helvetica Neue, Helvetica, Arial, sans-serif';
         context.textAlign = "center";
         context.fillStyle = bw(captionColor)
-        context.fillText('percent of the 4.4 billion people offline worldwide are in 20 countries', width / 2, letters.y + 42)
-        context.fillText('including the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + 70)
+        context.fillText('percent of the 4.4 billion people offline worldwide are in 20 countries', width / 2, letters.y + titleBottomMargin + captionLineHeight)
+        context.fillText('including the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + titleBottomMargin + captionLineHeight*2)
     }
 }
 
