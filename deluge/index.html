@@ -6,6 +6,7 @@
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <style>
     body {
         padding: 0;
@@ -31,15 +32,12 @@
     <script src="js/ijeoma.js"></script>
     <script src="js/main.js"></script>
     <script>
-    { %
-        if is_mobile %
-    }
-    // Hides mobile browser's address bar when page is done loading.
-    window.addEventListener('load', function(e) {
+    window.addEventListener("load", function() {
+        // Set a timeout...
         setTimeout(function() {
+            // Hide the address bar!
             window.scrollTo(0, 1);
-        }, 1);
-    }, false); { % endif %
-    }
+        }, 0);
+    });
     </script>
 </body>
