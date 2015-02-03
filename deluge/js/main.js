@@ -18,7 +18,9 @@ function setup() {
 
     titleHeight = width * .125 //context.measureText(word).width  
     titleBottomMargin = titleHeight * .1;
-    captionHeight = width * .015   
+    captionHeight = width * .015 
+    if(captionHeight <= 12)
+          captionHeight = 12
     captionLineHeight = captionHeight + captionHeight * .5;
     context.font = 'bold ' + titleHeight + 'px Helvetica Neue, Helvetica, Arial, sans-serif';
 
