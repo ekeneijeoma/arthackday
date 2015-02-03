@@ -44,12 +44,12 @@ function setup() {
 
     currentWord = '';
     wordCount = 0;
-    wordDuration = 75;
+    wordDuration = 90;
 
     titleHeight = width * .125
-    titleBottomMargin = titleHeight * .1; 
+    titleBottomMargin = titleHeight * .25;
     titleColor = 255;
-    titleDuration = 12500; 
+    titleDuration = 12500;
 
     captionHeight = max(width * .015, 14)
     captionDuration = 1000;
@@ -222,36 +222,36 @@ function shuffle(o) { //v1.0
 };
 
 /*! Normalized address bar hiding for iOS & Android (c) @scottjehl MIT License */
-(function( win ){
+(function(win) {
     var doc = win.document;
-    
+
     // If there's a hash, or addEventListener is undefined, stop here
-    if(!win.navigator.standalone && !location.hash && win.addEventListener ){
-        
+    if (!win.navigator.standalone && !location.hash && win.addEventListener) {
+
         //scroll to 1
-        win.scrollTo( 0, 1 );
+        win.scrollTo(0, 1);
         var scrollTop = 1,
-            getScrollTop = function(){
+            getScrollTop = function() {
                 return win.pageYOffset || doc.compatMode === "CSS1Compat" && doc.documentElement.scrollTop || doc.body.scrollTop || 0;
             },
-        
+
             //reset to 0 on bodyready, if needed
-            bodycheck = setInterval(function(){
-                if( doc.body ){
-                    clearInterval( bodycheck );
+            bodycheck = setInterval(function() {
+                if (doc.body) {
+                    clearInterval(bodycheck);
                     scrollTop = getScrollTop();
-                    win.scrollTo( 0, scrollTop === 1 ? 0 : 1 );
-                }   
-            }, 15 );
-        
-        win.addEventListener( "load", function(){
-            setTimeout(function(){
+                    win.scrollTo(0, scrollTop === 1 ? 0 : 1);
+                }
+            }, 15);
+
+        win.addEventListener("load", function() {
+            setTimeout(function() {
                 //at load, if user hasn't scrolled more than 20 or so...
-                if( getScrollTop() < 20 ){
+                if (getScrollTop() < 20) {
                     //reset to hide addr bar at onload
-                    win.scrollTo( 0, scrollTop === 1 ? 0 : 1 );
+                    win.scrollTo(0, scrollTop === 1 ? 0 : 1);
                 }
             }, 0);
-        }, false );
+        }, false);
     }
-})( this );
+})(this);
