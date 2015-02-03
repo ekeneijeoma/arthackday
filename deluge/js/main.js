@@ -201,19 +201,39 @@ function draw(time) {
     }
 }
 
-window.onmousemove = function(e) {
+function pause() {
+    lettersSequence.pause();
+    backgroundTween.pause();
+}
+
+function resume() {
+    if (!lettersSequence.isPlaying()) {
+        lettersSequence.resume();
+        backgroundTween.resume();
+    }
+}
+
+document.body.addEventListener('mousemove', function(e) {
     if (ended) return false;
 
     if (e.clientY > height / 2 - wordHeight && e.clientY < height / 2) {
-        lettersSequence.pause();
-        backgroundTween.pause();
+        pause();
     } else {
-        if (!lettersSequence.isPlaying()) {
-            lettersSequence.resume();
-            backgroundTween.resume();
-        }
+        resume();
     }
-}
+}, false)
+
+document.body.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    pause();
+}, false);
+document.body.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    resume();
+}, false);
+document.body.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+}, false);
 
 function bw(c, a) {
     r = g = b = (c | 0);
