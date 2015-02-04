@@ -62,11 +62,14 @@ function setup() {
 }
 
 function setupAnimation() {
+    titleHeight = width * .125
+    captionHeight = max(width * .015, 14);;
+
+    textSize(titleHeight);
+
     MOTION.removeAll();
 
     ended = false;
-
-    titleLetters = []
 
     titleLettersSequence = new MOTION.Sequence();
 
@@ -193,13 +196,7 @@ function draw() {
 }
 
 function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-
-    titleHeight = width * .125;
-    captionHeight = max(width * .015, 14);;
-
-    textSize(titleHeight);
-
+    resizeCanvas(windowWidth, windowHeight); 
     setupAnimation();
 }
 
