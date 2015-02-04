@@ -63,7 +63,10 @@ function setup() {
 
 function setupAnimation() {
     titleHeight = width * .125
-    captionHeight = max(width * .015, 14);;
+    titleColor = 255;
+
+    captionHeight = max(width * .015, 14);
+    captionColor = 0;
 
     textSize(titleHeight);
 
@@ -73,9 +76,9 @@ function setupAnimation() {
 
     titleLettersSequence = new MOTION.Sequence();
 
+
     titleLettersSequence.add(new MOTION.Tween(captionDuration)
-            .add('captionColor', [0, 255]))
-        // .add('titleColor', [0, 255]))
+            .add('captionColor', 255)) 
 
     titleLettersSequence.add(new MOTION(titleDuration))
 
