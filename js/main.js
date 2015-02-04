@@ -39,7 +39,7 @@ function setup() {
 
     currentLetter = '';
     letterCount = 0;
-    letterWordRepeat = 2;
+    letterWordRepeat = 3;
     letterFadeDuration = 1000;
 
     currentWord = '';
@@ -63,7 +63,7 @@ function setup() {
 
 function setupAnimation() {
     titleHeight = width * .125
-    titleColor = 255;
+    titleColor = 0;
 
     captionHeight = max(width * .015, 14);
     captionColor = 0;
@@ -76,9 +76,8 @@ function setupAnimation() {
 
     titleLettersSequence = new MOTION.Sequence();
 
-
     titleLettersSequence.add(new MOTION.Tween(captionDuration)
-            .add('captionColor', 255)) 
+        .add('captionColor', 255))
 
     titleLettersSequence.add(new MOTION(titleDuration))
 
@@ -135,10 +134,11 @@ function setupAnimation() {
     lettersSequence
         .onStart(function() {
             backgroundColorTween = new MOTION.Tween('backgroundColor', [255, 0], this.duration()).play()
-            titleColorTween = new MOTION.Sequence()
-                .add(new MOTION.Tween('titleColor', [255, 0], letterFadeDuration))
-                .add(new MOTION.Tween('titleColor', [0, 255], this.duration() - letterFadeDuration))
-                .play()
+                // titleColorTween = new MOTION.Sequence()
+                // .add(new MOTION.Tween('titleColor', [255, 0], letterFadeDuration))
+                // .add(new MOTION.Tween('titleColor', [0, 255], this.duration() - letterFadeDuration).relative())
+                // .play()
+            titleColorTween = new MOTION.Tween('titleColor', [0, 255], letterFadeDuration).play()
         })
         .onEnd(function() {
             ended = true;
@@ -167,12 +167,8 @@ function draw() {
     MOTION.update(millis());
 
     background(backgroundColor);
-    // blur(3);
-    //     Filters.filterImage(Filters.convolute, image,
-    //   [ 1/9, 1/9, 1/9,
-    //     1/9, 1/9, 1/9,
-    //     1/9, 1/9, 1/9 ]
-    // );
+
+    // filter('blur',5)
 
     if (!ended) {
         textSize(titleHeight)
@@ -199,7 +195,7 @@ function draw() {
 }
 
 function windowResized() {
-    resizeCanvas(windowWidth, windowHeight); 
+    resizeCanvas(windowWidth, windowHeight);
     setupAnimation();
 }
 
