@@ -37,12 +37,6 @@ function setup() {
         'INFRASTRUCTURE'
     ];
 
-    //number of websites from 1991 to 2013
-    websites = [1, 10, 130, 2738, 23500, 257601, 1117255, 2410067, 3177453, 17087182, 29254370, 38760373, 40912332, 51611646, 64780617, 85507314, 121892559, 172338726, 238027855, 206956723, 346004403, 697089489, 672985183];
-    scaledWebsites = websites.map(function(d) {
-        return d / websites[websites.length - 1]
-    })
-
     currentLetter = '';
     letterCount = 0;
     letterWordRepeat = 2;
@@ -52,8 +46,7 @@ function setup() {
     wordCount = 0;
     wordDuration = 90;
 
-    titleHeight = width * .125
-    titleBottomMargin = titleHeight * .25;
+    titleHeight = width * .125 
     titleColor = 255;
     titleDuration = 12500;
 
@@ -64,41 +57,35 @@ function setup() {
 
     ended = false;
 
-    textFont('Helvetica Neue, Helvetica, Arial, sans-serif');
-    textStyle(BOLD);
+    textFont('Helvetica Neue, Helvetica, Arial, sans-serif')
+    textStyle(BOLD)
+    textSize(titleHeight)
 
     noStroke();
 
-    setupAnimation();
+    setupSequence();
 }
 
-function setupAnimation() {
-    titleHeight = width * .125
-    titleBottomMargin = titleHeight * .25;
-
-    captionHeight = max(width * .015, 14)
-
-    textSize(titleHeight);
+function setupSequence() {
+    MOTION.removeAll();
 
     titleLetters = []
-
-    MOTION.removeAll();
 
     titleLettersSequence = new MOTION.Sequence();
 
     titleLettersSequence.add(new MOTION.Tween(captionDuration)
-        .add('captionColor', [0, 255]))
-    // .add('titleColor', [0, 255]))
+            .add('captionColor', [0, 255]))
+        // .add('titleColor', [0, 255]))
 
-    titleLettersSequence.add(new MOTION(titleDuration));
+    titleLettersSequence.add(new MOTION(titleDuration))
 
     titleLettersSequence
         .onStart(function() {
             backgroundColorTween = new MOTION.Tween('backgroundColor', [0, 255], this.duration()).play()
         }).onEnd(function() {
             ended = false;
-            lettersSequence.play();
-        });
+            lettersSequence.play()
+        })
 
     letters = [];
     letters.offset = textWidth(word) / 2;
@@ -118,13 +105,13 @@ function setupAnimation() {
                             word: words[j],
                             index: k,
                             offset: textWidth(words[j].substring(0, k))
-                        });
+                        })
 
         letters.push({
             letter: letter,
             offset: textWidth(word.substring(0, i)),
             words: shuffle(letterWords)
-        });
+        })
     }
 
     lettersSequence = new MOTION.Sequence();
@@ -138,7 +125,7 @@ function setupAnimation() {
             m.letter = letters[i];
             m.word = letters[i].words[j];
 
-            lettersSequence.add(m);
+            lettersSequence.add(m)
         }
     }
 
@@ -148,7 +135,7 @@ function setupAnimation() {
             titleColorTween = new MOTION.Sequence()
                 .add(new MOTION.Tween('titleColor', [255, 0], letterFadeDuration))
                 .add(new MOTION.Tween('titleColor', [0, 255], this.duration() - letterFadeDuration))
-                .play();
+                .play()
         })
         .onEnd(function() {
             ended = true;
@@ -184,33 +171,29 @@ function draw() {
     //     1/9, 1/9, 1/9 ]
     // );
 
+
     if (!ended) {
-        textSize(titleHeight);
+        textSize(titleHeight)
         textAlign(LEFT);
 
-        fill(titleColor);
-        text(1, letters.x, letters.y);
-        text(currentWord.word, letters.x + currentLetter.offset - currentWord.offset, letters.y);
+        fill(titleColor)
+        text(1, letters.x, letters.y)
+        text(currentWord.word, letters.x + currentLetter.offset - currentWord.offset, letters.y)
 
         fill(255)
-        text(currentLetter.letter, letters.x + currentLetter.offset, letters.y);
+        text(currentLetter.letter, letters.x + currentLetter.offset, letters.y)
     } else {
-        textSize(titleHeight);
+        textSize(titleHeight)
         textAlign(LEFT);
 
-        fill(titleColor);
-        text(word, letters.x, letters.y);
+        fill(titleColor)
+        text(word, letters.x, letters.y)
 
-        textSize(captionHeight);
+        textSize(captionHeight)
         textAlign(CENTER);
-        fill(captionColor);
-        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + titleBottomMargin)
+        fill(captionColor)
+        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + captionHeight)
     }
-}
-
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-    setupAnimation();
 }
 
 function mouseMoved() {
@@ -232,7 +215,6 @@ function touchEnded() {
 
 //+ Jonas Raoni Soares Silva
 //@ http://jsfromhell.com/array/shuffle [v1.0]
-
 function shuffle(o) { //v1.0
     for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
