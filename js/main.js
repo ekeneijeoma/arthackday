@@ -46,20 +46,15 @@ function setup() {
     wordCount = 0;
     wordDuration = 90;
 
-    titleHeight = width * .125 
     titleColor = 255;
     titleDuration = 15000;
 
-    captionHeight = max(width * .015, 14)
     captionDuration = 1000;
 
     backgroundColor = 255;
 
-    ended = false;
-
-    textFont('Helvetica Neue, Helvetica, Arial, sans-serif')
-    textStyle(BOLD)
-    textSize(titleHeight)
+    textFont('Helvetica Neue, Helvetica, Arial, sans-serif');
+    textStyle(BOLD);
 
     noStroke();
 
@@ -68,6 +63,8 @@ function setup() {
 
 function setupAnimation() {
     MOTION.removeAll();
+
+    ended = false;
 
     titleLetters = []
 
@@ -191,13 +188,19 @@ function draw() {
         textSize(captionHeight)
         textAlign(CENTER);
         fill(captionColor)
-        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + captionHeight*2)
+        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + captionHeight * 2)
     }
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  setupAnimation()
+    resizeCanvas(windowWidth, windowHeight);
+
+    titleHeight = width * .125;
+    captionHeight = max(width * .015, 14);;
+
+    textSize(titleHeight);
+
+    setupAnimation();
 }
 
 function mouseMoved() {
