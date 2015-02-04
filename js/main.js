@@ -48,7 +48,7 @@ function setup() {
 
     titleHeight = width * .125 
     titleColor = 255;
-    titleDuration = 12500;
+    titleDuration = 15000;
 
     captionHeight = max(width * .015, 14)
     captionDuration = 1000;
@@ -192,7 +192,7 @@ function draw() {
         textSize(captionHeight)
         textAlign(CENTER);
         fill(captionColor)
-        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + captionHeight)
+        text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + captionHeight*2)
     }
 }
 
