@@ -63,10 +63,10 @@ function setup() {
 
     noStroke();
 
-    setupSequence();
+    setupAnimation();
 }
 
-function setupSequence() {
+function setupAnimation() {
     MOTION.removeAll();
 
     titleLetters = []
@@ -171,7 +171,6 @@ function draw() {
     //     1/9, 1/9, 1/9 ]
     // );
 
-
     if (!ended) {
         textSize(titleHeight)
         textAlign(LEFT);
@@ -194,6 +193,11 @@ function draw() {
         fill(captionColor)
         text('percent of the 4.4 billion people offline worldwide are in 20 countries\nincluding the U.S., which has 50 million; 1 out of 6 people...', width / 2, letters.y + captionHeight*2)
     }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  setupAnimation()
 }
 
 function mouseMoved() {
